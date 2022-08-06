@@ -11,6 +11,8 @@ class OnBoardingScreen extends StatefulWidget {
 class _OnBoardingScreenState extends State<OnBoardingScreen> {
   late PageController _pageController;
 
+  int _pageIndex = 0;
+
   @override
   void initState() {
     _pageController = PageController(
@@ -29,40 +31,87 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: PageView.builder(
-                controller: _pageController,
-                itemCount: demo_data.length,
-                itemBuilder: (context, index) => OnBoardContent(
-                  image: demo_data[index].image,
-                  title: demo_data[index].title,
-                  description: demo_data[index].description,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              Expanded(
+                child: PageView.builder(
+                  controller: _pageController,
+                  itemCount: demo_data.length,
+                  onPageChanged: (index) {
+                    setState(() {
+                      _pageIndex = index;
+                    });
+                  },
+                  itemBuilder: (context, index) => OnBoardContent(
+                    image: demo_data[index].image,
+                    title: demo_data[index].title,
+                    description: demo_data[index].description,
+                  ),
                 ),
               ),
-            ),
-            SizedBox(
-              height: 60,
-              width: 60,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                    shape: const CircleBorder(), primary: Colors.indigo[800]),
-                onPressed: () {
-                  _pageController.nextPage(
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.ease);
-                },
-                child: SvgPicture.network(
-                  'https://www.svgrepo.com/show/115046/right-arrow.svg',
-                  placeholderBuilder: (context) =>
-                      const CircularProgressIndicator(),
-                  height: 100,
-                  color: Colors.white70,
-                ),
+              Row(
+                children: [
+                  ...List.generate(
+                    demo_data.length,
+                    (index) => Padding(
+                      padding: const EdgeInsets.only(right: 4),
+                      child: DotIndicator(isActive: index == _pageIndex),
+                    ),
+                  ),
+                  const Spacer(),
+                  SizedBox(
+                    height: 60,
+                    width: 60,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          shape: const CircleBorder(),
+                          primary: Theme.of(context).primaryColor),
+                      onPressed: () {
+                        _pageController.nextPage(
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.ease);
+                      },
+                      child: SvgPicture.network(
+                        'https://www.svgrepo.com/show/28675/right-arrow.svg',
+                        placeholderBuilder: (context) =>
+                            const CircularProgressIndicator(),
+                        height: 100,
+                        color: Colors.white70,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class DotIndicator extends StatelessWidget {
+  const DotIndicator({
+    Key? key,
+    this.isActive = false,
+  }) : super(key: key);
+
+  final bool isActive;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      height: isActive ? 12 : 4,
+      width: 4,
+      decoration: BoxDecoration(
+        color: isActive
+            ? Theme.of(context).primaryColor
+            : Theme.of(context).primaryColor.withOpacity(0.4),
+        borderRadius: const BorderRadius.all(
+          Radius.circular(12),
         ),
       ),
     );

@@ -16,6 +16,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        primaryColor: Colors.indigo[800],
+        accentColor: Colors.amber,
+        accentColorBrightness: Brightness.dark,
       ),
       home: const OnBoardingScreen(),
     );
