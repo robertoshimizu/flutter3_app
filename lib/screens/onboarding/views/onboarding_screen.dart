@@ -18,6 +18,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     _pageController = PageController(
       initialPage: 0,
     );
+    _pageIndex = 0;
     super.initState();
   }
 
@@ -69,9 +70,13 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                           shape: const CircleBorder(),
                           primary: Theme.of(context).primaryColor),
                       onPressed: () {
-                        _pageController.nextPage(
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.ease);
+                        if (_pageIndex == demo_data.length - 1) {
+                          _pageController.jumpToPage(0);
+                        } else {
+                          _pageController.nextPage(
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.ease);
+                        }
                       },
                       child: SvgPicture.network(
                         'https://www.svgrepo.com/show/28675/right-arrow.svg',
@@ -150,9 +155,9 @@ final List<OnBoard> demo_data = [
   ),
   const OnBoard(
     image: 'https://www.svgrepo.com/show/281711/meeting-interview.svg',
-    title: "Find the item you've \nbeen looking for",
+    title: "Nearby stores",
     description:
-        "Here you'll see rich varieties of goods carefully curated for seamless browsing experience.",
+        "Easily track nearby shops, browse through their items and get.",
   )
 ];
 
