@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import 'loginSignUp_screen.dart';
+
 class OnBoardingScreen extends StatefulWidget {
   const OnBoardingScreen({Key? key}) : super(key: key);
 
@@ -54,6 +56,28 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               ),
               Row(
                 children: [
+                  SizedBox(
+                    height: 60,
+                    width: 60,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                          shape: const CircleBorder(),
+                          primary: Theme.of(context).primaryColor),
+                      onPressed: () {
+                        _pageController.previousPage(
+                            duration: const Duration(milliseconds: 300),
+                            curve: Curves.ease);
+                      },
+                      child: SvgPicture.network(
+                        'https://www.svgrepo.com/show/41905/left-arrow.svg',
+                        placeholderBuilder: (context) =>
+                            const CircularProgressIndicator(),
+                        height: 100,
+                        color: Colors.white70,
+                      ),
+                    ),
+                  ),
+                  const Spacer(),
                   ...List.generate(
                     demo_data.length,
                     (index) => Padding(
@@ -71,7 +95,14 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                           primary: Theme.of(context).primaryColor),
                       onPressed: () {
                         if (_pageIndex == demo_data.length - 1) {
-                          _pageController.jumpToPage(0);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return LoginSignUpScreen();
+                              },
+                            ),
+                          );
                         } else {
                           _pageController.nextPage(
                               duration: const Duration(milliseconds: 300),
@@ -96,6 +127,8 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
     );
   }
 }
+
+
 
 class DotIndicator extends StatelessWidget {
   const DotIndicator({
