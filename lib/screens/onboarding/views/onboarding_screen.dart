@@ -128,8 +128,6 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
   }
 }
 
-
-
 class DotIndicator extends StatelessWidget {
   const DotIndicator({
     Key? key,
@@ -169,25 +167,25 @@ class OnBoard {
 // ignore: non_constant_identifier_names
 final List<OnBoard> demo_data = [
   const OnBoard(
-    image: 'https://www.svgrepo.com/show/281711/meeting-interview.svg',
+    image: 'assets/images/Scenes04.svg',
     title: "Find the item you've \nbeen looking for",
     description:
         "Here you'll see rich varieties of goods carefully curated for seamless browsing experience.",
   ),
   const OnBoard(
-    image: 'https://www.svgrepo.com/show/281711/meeting-interview.svg',
+    image: 'assets/images/Scenes02.svg',
     title: "Get those shopping \nbags filled",
     description:
         "Add any item you want to your cart, or save it on your wishlist.",
   ),
   const OnBoard(
-    image: 'https://www.svgrepo.com/show/281711/meeting-interview.svg',
+    image: 'assets/images/Scenes03.svg',
     title: "Find the item you've \nbeen looking for",
     description:
         "Here you'll see rich varieties of goods carefully curated for seamless browsing experience.",
   ),
   const OnBoard(
-    image: 'https://www.svgrepo.com/show/281711/meeting-interview.svg',
+    image: 'assets/images/Scenes04.svg',
     title: "Nearby stores",
     description:
         "Easily track nearby shops, browse through their items and get.",
@@ -209,13 +207,17 @@ class OnBoardContent extends StatelessWidget {
     return Column(
       children: [
         const Spacer(),
-        SvgPicture.network(
+        // SvgPicture.network(
+        //   image,
+        //   placeholderBuilder: (context) => const CircularProgressIndicator(),
+        //   height: 200,
+        // ),
+        SvgPicture.asset(
           image,
-          placeholderBuilder: (context) => const CircularProgressIndicator(),
+          semanticsLabel: 'Scene',
           height: 200,
+          cacheColorFilter: true,
         ),
-        // SvgPicture.asset('assets/images/Scenes03.svg',
-        //     semanticsLabel: 'Meeting'),
         const Spacer(),
         Text(
           title,
