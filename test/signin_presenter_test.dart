@@ -8,6 +8,7 @@
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter3_app/app/pages/login/login_presenter.dart';
+
 import 'package:flutter3_app/app/pages/login/login_view.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -15,10 +16,13 @@ import 'package:mockito/mockito.dart';
 class LoginPresenterSpy extends Mock implements LoginPresenter {}
 
 void main() {
-  LoginPresenter? loginPresenter;
+  late LoginPresenter loginPresenter;
   Future<void> loadPage(WidgetTester tester) async {
     loginPresenter = LoginPresenterSpy();
-    final signinPage = MaterialApp(home: SignInScreen());
+    final signinPage = MaterialApp(
+        home: SignInScreen(
+      loginPresenter: loginPresenter,
+    ));
     await tester.pumpWidget(signinPage);
   }
 
@@ -36,6 +40,6 @@ void main() {
     await tester.pump();
     await tester.tap(find.byType(ElevatedButton));
 
-    verify(loginPresenter!.auth()).called(1);
+    verify(loginPresenter.auth()).called(1);
   });
 }

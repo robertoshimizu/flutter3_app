@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import '../onBoarding/onboarding_view.dart';
+import 'login_presenter.dart';
 
 class SignInScreen extends StatefulWidget {
+  final LoginPresenter? loginPresenter;
   const SignInScreen({
     Key? key,
+    required this.loginPresenter,
   }) : super(key: key);
 
   @override
@@ -254,7 +256,9 @@ class _SignInScreenState extends State<SignInScreen> {
         ),
         onPressed: () {
           debugPrint('Login Button Pressed');
+
           if (_formKey.currentState!.validate()) {
+            widget.loginPresenter!.auth();
             debugPrint(loginParams.email + loginParams.password);
             // If the form is valid, display a snackbar. In the real world,
             // you'd often call a server or save the information in a database.

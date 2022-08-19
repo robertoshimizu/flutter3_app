@@ -99,7 +99,9 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                             context,
                             MaterialPageRoute(
                               builder: (context) {
-                                return const SignInScreen();
+                                return const SignInScreen(
+                                  loginPresenter: null,
+                                );
                               },
                             ),
                           );
