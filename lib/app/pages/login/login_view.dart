@@ -1,25 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class LoginSignUpScreen extends StatefulWidget {
-  const LoginSignUpScreen({
+import '../onBoarding/onboarding_view.dart';
+
+class SignInScreen extends StatefulWidget {
+  const SignInScreen({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<LoginSignUpScreen> createState() => _LoginSignUpScreenState();
+  State<SignInScreen> createState() => _SignInScreenState();
 }
 
-class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
+class _SignInScreenState extends State<SignInScreen> {
+  // Create a variable to control and validate overall form STATE
+  final _formKey = GlobalKey<FormState>();
+
   bool _rememberMe = false;
+  late LoginParams loginParams;
+
+  @override
+  initState() {
+    super.initState();
+    loginParams = LoginParams();
+    debugPrint("initState Called");
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         value: SystemUiOverlayStyle.light,
         child: GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
+          onTap: () {},
           child: Stack(
+            // This structure stack containers, first background and second in front.
             children: <Widget>[
               Container(
                 height: double.infinity,
@@ -41,6 +56,7 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
               Container(
                 height: double.infinity,
                 child: SingleChildScrollView(
+                  controller: ScrollController(initialScrollOffset: 50.0),
                   physics: const AlwaysScrollableScrollPhysics(),
                   padding: const EdgeInsets.symmetric(
                     horizontal: 40.0,
@@ -58,15 +74,22 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const SizedBox(height: 30.0),
-                      _buildEmailTF(),
-                      const SizedBox(
-                        height: 30.0,
+                      Form(
+                        key: _formKey,
+                        child: Column(
+                          children: [
+                            const SizedBox(height: 30.0),
+                            _buildEmailTF(),
+                            const SizedBox(
+                              height: 30.0,
+                            ),
+                            _buildPasswordTF(),
+                            _buildForgotPasswordBtn(),
+                            _buildRememberMeCheckbox(),
+                            _buildLoginBtn(),
+                          ],
+                        ),
                       ),
-                      _buildPasswordTF(),
-                      _buildForgotPasswordBtn(),
-                      _buildRememberMeCheckbox(),
-                      _buildLoginBtn(),
                       _buildSignInWithText(),
                       _buildSocialBtnRow(),
                       _buildSignupBtn(),
@@ -94,13 +117,25 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
           alignment: Alignment.centerLeft,
           decoration: kBoxDecorationStyle,
           height: 60.0,
-          child: const TextField(
+          child: TextFormField(
+            validator: (value) {
+              Pattern pattern =
+                  r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]"
+                  r"{0,253}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]"
+                  r"{0,253}[a-zA-Z0-9])?)*$";
+              RegExp regex = RegExp(pattern.toString());
+              if (!regex.hasMatch(value!) || value.isEmpty) {
+                return 'Please enter a valid email';
+              }
+              loginParams.setEmail = value;
+              return null;
+            },
             keyboardType: TextInputType.emailAddress,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.white,
               fontFamily: 'OpenSans',
             ),
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               border: InputBorder.none,
               contentPadding: EdgeInsets.only(top: 14.0),
               prefixIcon: Icon(
@@ -129,13 +164,23 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
           alignment: Alignment.centerLeft,
           decoration: kBoxDecorationStyle,
           height: 60.0,
-          child: const TextField(
+          child: TextFormField(
+            validator: ((value) {
+              // RegExp regex = RegExp(
+              //     r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\><*~]).{8,}/pre>');
+              // if (!regex.hasMatch(value!) || value.isEmpty) {
+              if (value!.isEmpty) {
+                return 'Please enter a valid password';
+              }
+              loginParams.setPassword = value;
+              return null;
+            }),
             obscureText: true,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.white,
               fontFamily: 'OpenSans',
             ),
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               border: InputBorder.none,
               contentPadding: EdgeInsets.only(top: 14.0),
               prefixIcon: Icon(
@@ -154,9 +199,11 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
   Widget _buildForgotPasswordBtn() {
     return Container(
       alignment: Alignment.centerRight,
-      child: FlatButton(
-        onPressed: () => print('Forgot Password Button Pressed'),
-        padding: const EdgeInsets.only(right: 0.0),
+      child: TextButton(
+        onPressed: () => debugPrint('Forgot Password Button Pressed'),
+        style: TextButton.styleFrom(
+          padding: const EdgeInsets.only(right: 0.0),
+        ),
         child: const Text(
           'Forgot Password?',
           style: kLabelStyle,
@@ -196,14 +243,26 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 25.0),
       width: double.infinity,
-      child: RaisedButton(
-        elevation: 5.0,
-        onPressed: () => print('Login Button Pressed'),
-        padding: const EdgeInsets.all(15.0),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30.0),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          elevation: 5.0,
+          padding: const EdgeInsets.all(15.0),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30.0),
+          ),
+          primary: Colors.white,
         ),
-        color: Colors.white,
+        onPressed: () {
+          debugPrint('Login Button Pressed');
+          if (_formKey.currentState!.validate()) {
+            debugPrint(loginParams.email + loginParams.password);
+            // If the form is valid, display a snackbar. In the real world,
+            // you'd often call a server or save the information in a database.
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Processing Data')),
+            );
+          }
+        },
         child: const Text(
           'LOGIN',
           style: TextStyle(
@@ -268,13 +327,13 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           _buildSocialBtn(
-            () => print('Login with Facebook'),
+            () => debugPrint('Login with Facebook'),
             const AssetImage(
               'assets/logos/facebook.jpeg',
             ),
           ),
           _buildSocialBtn(
-            () => print('Login with Google'),
+            () => debugPrint('Login with Google'),
             const AssetImage(
               'assets/logos/google.jpeg',
             ),
@@ -286,7 +345,17 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
 
   Widget _buildSignupBtn() {
     return GestureDetector(
-      onTap: () => print('Sign Up Button Pressed'),
+      onTap: () {
+        debugPrint('Login Button Pressed');
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) {
+              return const OnBoardingScreen();
+            },
+          ),
+        );
+      },
       child: RichText(
         text: const TextSpan(
           children: [
@@ -313,9 +382,33 @@ class _LoginSignUpScreenState extends State<LoginSignUpScreen> {
   }
 }
 
+class LoginParams {
+  late String _email;
+  late String _password;
+
+  LoginParams();
+
+  String get email {
+    return _email;
+  }
+
+  String get password {
+    return _password;
+  }
+
+  set setEmail(String email) {
+    _email = email;
+  }
+
+  set setPassword(String password) {
+    _password = password;
+  }
+}
+
 const kHintTextStyle = TextStyle(
   color: Colors.white54,
   fontFamily: 'OpenSans',
+  fontSize: 12.0,
 );
 
 const kLabelStyle = TextStyle(
