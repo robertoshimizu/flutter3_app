@@ -5,6 +5,8 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
+import 'dart:async';
+
 import 'package:faker/faker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter3_app/app/pages/login/login_presenter.dart';
@@ -17,14 +19,25 @@ class LoginPresenterSpy extends Mock implements LoginPresenter {}
 
 void main() {
   late LoginPresenter loginPresenter;
+  late StreamController<bool> isLoadingController;
+
   Future<void> loadPage(WidgetTester tester) async {
     loginPresenter = LoginPresenterSpy();
+    isLoadingController = StreamController<bool>();
+
+    when(loginPresenter.isLoadingStream)
+        .thenAnswer((_) => isLoadingController.stream);
+
     final signinPage = MaterialApp(
         home: SignInScreen(
       loginPresenter: loginPresenter,
     ));
     await tester.pumpWidget(signinPage);
   }
+
+  tearDown(() {
+    isLoadingController.close();
+  });
 
   testWidgets('Should call authentication on form submit',
       (WidgetTester tester) async {
@@ -41,5 +54,15 @@ void main() {
     await tester.tap(find.byType(ElevatedButton));
 
     verify(loginPresenter.auth()).called(1);
+  });
+
+  testWidgets('Should present a loading screen after login button is pressed',
+      (WidgetTester tester) async {
+    await loadPage(tester);
+
+    isLoadingController.add(true);
+    await tester.pump();
+
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
   });
 }
