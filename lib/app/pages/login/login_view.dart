@@ -36,27 +36,32 @@ class _SignInScreenState extends State<SignInScreen> {
           widget.loginPresenter?.isLoadingStream?.listen((isLoading) {
             if (isLoading) {
               showDialog(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: (context) {
-                    return SimpleDialog(
-                      children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            CircularProgressIndicator(),
-                            SizedBox(
-                              height: 10.0,
-                            ),
-                            Text(
-                              'Aguarde ...',
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        )
-                      ],
-                    );
-                  });
+                context: context,
+                barrierDismissible: false,
+                builder: (context) {
+                  return SimpleDialog(
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: const [
+                          CircularProgressIndicator(),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          Text(
+                            'Aguarde ...',
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      )
+                    ],
+                  );
+                },
+              );
+            } else {
+              if (Navigator.canPop(context)) {
+                Navigator.of(context).pop();
+              }
             }
           });
           return AnnotatedRegion<SystemUiOverlayStyle>(
