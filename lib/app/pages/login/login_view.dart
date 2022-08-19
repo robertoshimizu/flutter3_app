@@ -29,6 +29,12 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   @override
+  void dispose() {
+    widget.loginPresenter!.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Builder(
@@ -64,6 +70,22 @@ class _SignInScreenState extends State<SignInScreen> {
               }
             }
           });
+
+          widget.loginPresenter?.loginAuthStream?.listen((errorMessage) {
+            if (errorMessage != null) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    errorMessage,
+                    textAlign: TextAlign.center,
+                  ),
+                  duration: const Duration(milliseconds: 1000),
+                  backgroundColor: Colors.red[900],
+                ),
+              );
+            }
+          });
+
           return AnnotatedRegion<SystemUiOverlayStyle>(
             value: SystemUiOverlayStyle.light,
             child: GestureDetector(

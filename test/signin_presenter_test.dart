@@ -20,13 +20,17 @@ class LoginPresenterSpy extends Mock implements LoginPresenter {}
 void main() {
   late LoginPresenter loginPresenter;
   late StreamController<bool> isLoadingController;
+  late StreamController<String> loginAuthController;
 
   Future<void> loadPage(WidgetTester tester) async {
     loginPresenter = LoginPresenterSpy();
     isLoadingController = StreamController<bool>();
+    loginAuthController = StreamController<String>();
 
     when(loginPresenter.isLoadingStream)
         .thenAnswer((_) => isLoadingController.stream);
+    when(loginPresenter.loginAuthStream)
+        .thenAnswer((_) => loginAuthController.stream);
 
     final signinPage = MaterialApp(
         home: SignInScreen(
@@ -37,6 +41,7 @@ void main() {
 
   tearDown(() {
     isLoadingController.close();
+    loginAuthController.close();
   });
 
   testWidgets('Should call authentication on form submit',
@@ -77,5 +82,24 @@ void main() {
     await tester.pump();
 
     expect(find.byType(CircularProgressIndicator), findsNothing);
+  });
+
+  testWidgets('Should exhibit error message if login/authentication fails',
+      (WidgetTester tester) async {
+    await loadPage(tester);
+
+    loginAuthController.add('login failed');
+    await tester.pump();
+
+    expect(find.text('login failed'), findsOneWidget);
+  });
+
+  testWidgets('Should close all streams when page is disposed',
+      (WidgetTester tester) async {
+    await loadPage(tester);
+
+    addTearDown(() {
+      verify(loginPresenter.dispose()).called(1);
+    });
   });
 }
