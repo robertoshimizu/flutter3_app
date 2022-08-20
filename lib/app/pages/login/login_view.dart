@@ -311,11 +311,11 @@ class _SignInScreenState extends State<SignInScreen> {
           ),
           primary: Colors.white,
         ),
-        onPressed: () {
+        onPressed: () async {
           debugPrint('Login Button Pressed');
 
           if (_formKey.currentState!.validate()) {
-            widget.loginPresenter!.auth();
+            await widget.loginPresenter?.auth();
             debugPrint(loginParams.email + loginParams.password);
             // If the form is valid, display a snackbar. In the real world,
             // you'd often call a server or save the information in a database.

@@ -2,6 +2,6 @@ abstract class LoginPresenter {
   Stream<bool>? get isLoadingStream;
   Stream<String?>? get loginAuthStream;
 
-  void auth();
+  Future<void>? auth();
   void dispose();
 }
