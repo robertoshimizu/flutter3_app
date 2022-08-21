@@ -55,4 +55,15 @@ void main() {
 
     await sut.auth(loginParams);
   });
+
+  test(
+      'Should emit correct events when Authentication fails unexpectedly',
+      () async {
+    mockAuthenticationError(DomainError.unexpected);
+
+    expectLater(sut.isLoadingStream, emitsInOrder([false]));
+    sut.loginAuthErrorStream.listen(expectAsync1((error)=>expect(error, 'Algo errado aconteceu. Tente novamente em breve.')));
+
+    await sut.auth(loginParams);
+  });
 }
