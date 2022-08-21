@@ -315,10 +315,8 @@ class _SignInScreenState extends State<SignInScreen> {
         ),
         onPressed: () async {
           debugPrint('Login Button Pressed');
-
           if (_formKey.currentState!.validate()) {
-            await widget.loginPresenter?.auth(loginParams);
-            debugPrint(loginParams.email + loginParams.password);
+            await widget.loginPresenter?.auth(loginParams);            
             // If the form is valid, display a snackbar. In the real world,
             // you'd often call a server or save the information in a database.
             ScaffoldMessenger.of(context).showSnackBar(

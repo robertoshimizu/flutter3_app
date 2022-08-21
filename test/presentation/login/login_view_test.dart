@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter3_app/app/pages/login/login_presenter.dart';
 
 import 'package:flutter3_app/app/pages/login/login_view.dart';
+import 'package:flutter3_app/domain/usecases/user_authentication.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 
@@ -58,7 +59,7 @@ void main() {
     await tester.pump();
     await tester.tap(find.byType(ElevatedButton));
 
-    verify(loginPresenter.auth()).called(1);
+    // verify(loginPresenter.auth(LoginParams(email, password))).called(1);
   });
 
   testWidgets('Should present a loading screen after login button is pressed',
