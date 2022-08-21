@@ -29,7 +29,7 @@ void main() {
 
     when(loginPresenter.isLoadingStream)
         .thenAnswer((_) => isLoadingController.stream);
-    when(loginPresenter.loginAuthStream)
+    when(loginPresenter.loginAuthErrorStream)
         .thenAnswer((_) => loginAuthController.stream);
 
     final signinPage = MaterialApp(

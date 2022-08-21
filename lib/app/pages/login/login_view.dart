@@ -1,6 +1,7 @@
-import 'package:equatable/equatable.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../../../domain/usecases/user_authentication.dart';
 import '../onBoarding/onboarding_view.dart';
 import 'login_presenter.dart';
 
@@ -72,7 +73,7 @@ class _SignInScreenState extends State<SignInScreen> {
             }
           });
 
-          widget.loginPresenter?.loginAuthStream?.listen((errorMessage) {
+          widget.loginPresenter?.loginAuthErrorStream?.listen((errorMessage) {
             if (errorMessage != null) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -442,33 +443,6 @@ class _SignInScreenState extends State<SignInScreen> {
       ),
     );
   }
-}
-
-class LoginParams extends Equatable{
-  late String? _email;
-  late String? _password; 
-
-  LoginParams(this._email, this._password);
-
-  String get email {
-    return email;
-  }
-
-  String get password {
-    return password;
-  }
-
-  set setEmail(String email) {
-    email = email;
-  }
-
-  set setPassword(String password) {
-    password = password;
-  }
-  
-  @override
-  
-  List get props => [email,password];
 }
 
 const kHintTextStyle = TextStyle(

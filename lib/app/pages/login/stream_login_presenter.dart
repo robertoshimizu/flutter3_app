@@ -1,12 +1,13 @@
 import 'dart:async';
 
-import 'package:flutter3_app/app/pages/login/login_presenter.dart';
+import 'package:flutter3_app/domain/helpers/domain_errors.dart';
 
 import '../../../domain/usecases/user_authentication.dart';
 import 'login_view.dart';
 
 class LoginState {
   bool isLoading = false;
+  late String loginAuthError;
 }
 
 class StreamLoginPresenter {
@@ -16,7 +17,10 @@ class StreamLoginPresenter {
   var _state = LoginState();
 
   Stream<bool> get isLoadingStream =>
-      _controller.stream.map((state) => state.isLoading);
+      _controller.stream.map((state) => state.isLoading).distinct();
+
+  Stream<String> get loginAuthErrorStream =>
+      _controller.stream.map((state) => state.loginAuthError).distinct();
 
   StreamLoginPresenter({required this.authentication});
 
@@ -25,7 +29,12 @@ class StreamLoginPresenter {
   Future<void>? auth(LoginParams loginParams) async {
     _state.isLoading = true;
     _update();
-    await authentication.auth(loginParams);
+
+    try {
+      await authentication.auth(loginParams);
+    } on DomainError catch (error) {
+      _state.loginAuthError = error.description;
+    }
     _state.isLoading = false;
     _update();
   }
