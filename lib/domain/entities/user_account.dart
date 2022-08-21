@@ -1,7 +1,7 @@
 class AccountEntity {
-  final String guid;
+  final String token;
 
-  AccountEntity(this.guid);
+  AccountEntity(this.token);
 
   
 }
