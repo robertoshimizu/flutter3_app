@@ -84,6 +84,14 @@ void main() {
     await tester.pumpWidget(MaterialApp(home: SignInScreen()));
 ```
 
+## Model View Presenter Pattern
+
+- Model: It is an interface defining the data to be displayed or otherwise acted upon in the user interface.
+- View: It is a passive interface that displays data (the model) and routes user commands (events) to the presenter to act upon that data.
+- Presenter: It acts upon the model and the view. It retrieves data from repositories (the model) and formats it for display in the view.
+
+![MVP](./mvp_diagram.png)
+
 ## Dart Streams
 
 From https://dart.dev/tutorials/language/streams

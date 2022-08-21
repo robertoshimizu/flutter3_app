@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../onBoarding/onboarding_view.dart';
@@ -24,7 +25,7 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   initState() {
     super.initState();
-    loginParams = LoginParams();
+    loginParams = LoginParams(null, null);
     debugPrint("initState Called");
   }
 
@@ -315,7 +316,7 @@ class _SignInScreenState extends State<SignInScreen> {
           debugPrint('Login Button Pressed');
 
           if (_formKey.currentState!.validate()) {
-            await widget.loginPresenter?.auth();
+            await widget.loginPresenter?.auth(loginParams: loginParams);
             debugPrint(loginParams.email + loginParams.password);
             // If the form is valid, display a snackbar. In the real world,
             // you'd often call a server or save the information in a database.
@@ -443,27 +444,31 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 }
 
-class LoginParams {
-  late String _email;
-  late String _password;
+class LoginParams extends Equatable{
+  late String? _email;
+  late String? _password; 
 
-  LoginParams();
+  LoginParams(this._email, this._password);
 
   String get email {
-    return _email;
+    return email;
   }
 
   String get password {
-    return _password;
+    return password;
   }
 
   set setEmail(String email) {
-    _email = email;
+    email = email;
   }
 
   set setPassword(String password) {
-    _password = password;
+    password = password;
   }
+  
+  @override
+  
+  List get props => [email,password];
 }
 
 const kHintTextStyle = TextStyle(
