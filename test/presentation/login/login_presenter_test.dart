@@ -26,14 +26,12 @@ void main() {
   });
 
   test('Should call Authentication with correct email and password', () async {
-    
     await sut.auth(loginParams);
     verify(authentication.auth(loginParams)).called(1);
   });
 
-  test('Should emit when Authetication suceeds', () async {
+  test('Should emit correct events when Authentication suceeds', () async {
+    expectLater(sut.isLoadingStream, emitsInOrder([true,false]));
     await sut.auth(loginParams);
-
-    verify(authentication.auth(loginParams)).called(1);
   });
 }
