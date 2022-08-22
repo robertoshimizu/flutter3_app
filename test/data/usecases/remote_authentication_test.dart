@@ -42,4 +42,32 @@ void main() {
 
     expect(future, throwsA(DomainError.unexpected));
   });
+
+  test('Should throw UnexpectedError if HttpClient returns 404', () async {
+    when(httpClient.request(url: url, method: 'post', body: body))
+        .thenThrow(HttpError.notFound);
+
+    final future = sut.auth(authenticationParams);
+
+    expect(future, throwsA(DomainError.unexpected));
+  });
+
+  test('Should throw UnexpectedError if HttpClient returns 500', () async {
+    when(httpClient.request(url: url, method: 'post', body: body))
+        .thenThrow(HttpError.serverError);
+
+    final future = sut.auth(authenticationParams);
+
+    expect(future, throwsA(DomainError.unexpected));
+  });
+
+  test('Should throw InvalidCredentialsError if HttpClient returns 401',
+      () async {
+    when(httpClient.request(url: url, method: 'post', body: body))
+        .thenThrow(HttpError.unauthorized);
+
+    final future = sut.auth(authenticationParams);
+
+    expect(future, throwsA(DomainError.invalidCredentials));
+  });
 }
