@@ -71,9 +71,11 @@ lib/
     main.dart                     <--- entry point
 
 ```
+
 ### Observations
 
 1. Decouple internal syntax in domain (AuthenticationParams) from syntax of External API. Therefore, created a `factory`to create an instance of itself.
+
 ```dart
 class RemoteAuthenticationParams extends Equatable {
   late String email;
@@ -85,12 +87,23 @@ class RemoteAuthenticationParams extends Equatable {
       RemoteAuthenticationParams(params.email, params.password);
 
   Map toJson() => {'email': email, 'password': password};
-  ```
+```
 
+Same idea to AccountEntity (coreModel) and RemoteAccountModel (from External API)
 
+```dart
+class RemoteAccountModel {
+  final String token;
 
-2. 
+  RemoteAccountModel(this.token);
 
+  factory RemoteAccountModel.fromJson(Map json) =>
+      RemoteAccountModel(json['accessToken']);
+  AccountEntity toEntity() => AccountEntity(token);
+}
+```
+
+2.
 
 ### Testing widgets
 
