@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter3_app/domain/helpers/domain_errors.dart';
 
 import '../../../domain/usecases/user_authentication.dart';
-import 'login_view.dart';
+
 
 class LoginState {
   bool isLoading = false;

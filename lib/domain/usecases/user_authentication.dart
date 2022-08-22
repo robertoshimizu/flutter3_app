@@ -12,6 +12,11 @@ class LoginParams extends Equatable{
 
   LoginParams(this.email, this.password);
 
+  Map toJson() => {
+                  'email': email, 
+                  'password': password
+                  };
+
   String get mail {
     return email;
   }
