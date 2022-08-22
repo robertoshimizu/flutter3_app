@@ -7,16 +7,16 @@ abstract class Authentication {
 }
 
 class LoginParams extends Equatable{
-  late String? _email;
-  late String? _password; 
+  late String email;
+  late String password; 
 
-  LoginParams(this._email, this._password);
+  LoginParams(this.email, this.password);
 
-  String get email {
+  String get mail {
     return email;
   }
 
-  String get password {
+  String get secret {
     return password;
   }
 

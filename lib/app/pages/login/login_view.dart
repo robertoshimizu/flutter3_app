@@ -26,7 +26,7 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   initState() {
     super.initState();
-    loginParams = LoginParams(null, null);
+    loginParams = LoginParams('', '');
     debugPrint("initState Called");
   }
 
