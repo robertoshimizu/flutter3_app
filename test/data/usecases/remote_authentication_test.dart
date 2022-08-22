@@ -29,6 +29,10 @@ void main() {
     sut = RemoteAuthentication(httpClient: httpClient, url: url);
   });
   test('Should call Http Client with correct url', () async {
+    final accessToken = faker.guid.guid();
+    when(httpClient.request(url: url, method: 'post', body: body)).thenAnswer(
+        (_) async => {'accessToken': accessToken, 'name': faker.person.name()});
+
     await sut.auth(authenticationParams);
 
     verify(httpClient.request(url: url, method: 'post', body: body));
@@ -69,5 +73,15 @@ void main() {
     final future = sut.auth(authenticationParams);
 
     expect(future, throwsA(DomainError.invalidCredentials));
+  });
+
+  test('Should return an AccountEntity if HttpClient returns 200', () async {
+    final accessToken = faker.guid.guid();
+    when(httpClient.request(url: url, method: 'post', body: body)).thenAnswer(
+        (_) async => {'accessToken': accessToken, 'name': faker.person.name()});
+
+    final account = await sut.auth(authenticationParams);
+
+    expect(account!.token, accessToken);
   });
 }
