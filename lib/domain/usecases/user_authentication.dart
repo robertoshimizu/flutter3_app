@@ -1,21 +1,18 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter3_app/app/pages/login/login_view.dart';
-import 'package:flutter3_app/domain/entities/user_account.dart';
+
+import '../entities/entities.dart';
 
 abstract class Authentication {
-  Future<AccountEntity>? auth(LoginParams loginParams);
+  Future<AccountEntity>? auth(AuthenticationParams authenticationParams);
 }
 
-class LoginParams extends Equatable{
+class AuthenticationParams extends Equatable {
   late String email;
-  late String password; 
+  late String password;
 
-  LoginParams(this.email, this.password);
+  AuthenticationParams(this.email, this.password);
 
-  Map toJson() => {
-                  'email': email, 
-                  'password': password
-                  };
+  Map toJson() => {'email': email, 'password': password};
 
   String get mail {
     return email;
@@ -32,8 +29,7 @@ class LoginParams extends Equatable{
   set setPassword(String password) {
     password = password;
   }
-  
+
   @override
-  
-  List get props => [email,password];
+  List get props => [email, password];
 }

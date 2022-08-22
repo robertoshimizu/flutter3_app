@@ -1,7 +1,6 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../../domain/usecases/user_authentication.dart';
+import '../../../domain/usecases/usecases.dart';
 import '../onBoarding/onboarding_view.dart';
 import 'login_presenter.dart';
 
@@ -21,12 +20,12 @@ class _SignInScreenState extends State<SignInScreen> {
   final _formKey = GlobalKey<FormState>();
 
   bool _rememberMe = false;
-  late LoginParams loginParams;
+  late AuthenticationParams authenticationParams;
 
   @override
   initState() {
     super.initState();
-    loginParams = LoginParams('', '');
+    authenticationParams = AuthenticationParams('', '');
     debugPrint("initState Called");
   }
 
@@ -188,7 +187,7 @@ class _SignInScreenState extends State<SignInScreen> {
               if (!regex.hasMatch(value!) || value.isEmpty) {
                 return 'Please enter a valid email';
               }
-              loginParams.setEmail = value;
+              authenticationParams.setEmail = value;
               return null;
             },
             keyboardType: TextInputType.emailAddress,
@@ -233,7 +232,7 @@ class _SignInScreenState extends State<SignInScreen> {
               if (value!.isEmpty) {
                 return 'Please enter a valid password';
               }
-              loginParams.setPassword = value;
+              authenticationParams.setPassword = value;
               return null;
             }),
             obscureText: true,
@@ -316,7 +315,7 @@ class _SignInScreenState extends State<SignInScreen> {
         onPressed: () async {
           debugPrint('Login Button Pressed');
           if (_formKey.currentState!.validate()) {
-            await widget.loginPresenter?.auth(loginParams);            
+            await widget.loginPresenter?.auth(authenticationParams);
             // If the form is valid, display a snackbar. In the real world,
             // you'd often call a server or save the information in a database.
             ScaffoldMessenger.of(context).showSnackBar(

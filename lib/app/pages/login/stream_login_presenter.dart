@@ -4,7 +4,6 @@ import 'package:flutter3_app/domain/helpers/domain_errors.dart';
 
 import '../../../domain/usecases/user_authentication.dart';
 
-
 class LoginState {
   bool isLoading = false;
   late String loginAuthError;
@@ -26,12 +25,12 @@ class StreamLoginPresenter {
 
   void _update() => _controller.add(_state);
 
-  Future<void>? auth(LoginParams loginParams) async {
+  Future<void>? auth(AuthenticationParams AuthenticationParams) async {
     _state.isLoading = true;
     _update();
 
     try {
-      await authentication.auth(loginParams);
+      await authentication.auth(AuthenticationParams);
     } on DomainError catch (error) {
       _state.loginAuthError = error.description;
     }
