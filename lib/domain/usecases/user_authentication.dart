@@ -12,8 +12,6 @@ class AuthenticationParams extends Equatable {
 
   AuthenticationParams(this.email, this.password);
 
-  Map toJson() => {'email': email, 'password': password};
-
   String get mail {
     return email;
   }

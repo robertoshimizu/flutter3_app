@@ -28,7 +28,9 @@ void main() {
   test('Should call Http Client with correct url', () async {
     await sut.auth(authenticationParams);
 
-    verify(httpClient.request(
-        url: url, method: 'post', body: authenticationParams.toJson()));
+    final body =
+        RemoteAuthenticationParams.fromDomain(authenticationParams).toJson();
+
+    verify(httpClient.request(url: url, method: 'post', body: body));
   });
 }
