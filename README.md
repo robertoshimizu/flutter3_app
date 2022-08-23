@@ -72,6 +72,10 @@ lib/
 
 ```
 
+### Arquitetura do Projeto
+
+![Arquitetura](./diagrama_arquitetura.png)
+
 ### Observations
 
 1. Decouple internal syntax in domain (AuthenticationParams) from syntax of External API. Therefore, created a `factory`to create an instance of itself.
