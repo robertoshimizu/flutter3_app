@@ -36,7 +36,7 @@ class StreamLoginPresenter implements LoginPresenter {
 
     try {
       var response = await authentication.auth(AuthenticationParams);
-      debugPrint('name: ${response!.name}   token: ${response.token} ');
+      // debugPrint('name: ${response!.name}   token: ${response.token} ');
     } on DomainError catch (error) {
       _state.loginAuthError = error.description;
     }

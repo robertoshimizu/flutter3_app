@@ -10,6 +10,8 @@ class HttpAdapter implements HttpClient {
 
   HttpAdapter(this.client);
 
+  late Response response;
+
   @override
   Future<Map<dynamic, dynamic>?> request({
     required String url,
@@ -27,35 +29,34 @@ class HttpAdapter implements HttpClient {
 
     if (method == "post") {
       try {
-        Response response = await client.post(
+        response = await client.post(
           Uri.parse(url),
           headers: headers,
           body: jsonBody,
           encoding: null,
         );
-        // debugPrint(response.body);
-
-        switch (response.statusCode) {
-          case 200:
-            return response.body.isEmpty ? null : jsonDecode(response.body);
-          case 204:
-            return null;
-          case 400:
-            throw HttpError.badRequest;
-          case 401:
-            throw HttpError.unauthorized;
-          case 403:
-            throw HttpError.forbidden;
-          case 404:
-            throw HttpError.notFound;
-          case 500:
-            throw HttpError.serverError;
-          default:
-            throw Exception('Out of Exception - Check http_adapter');
-        }
+        debugPrint('Response Code: ${response.statusCode}');
       } catch (e) {
-        debugPrint('Deu mal');
         throw HttpError.serverError;
+      }
+
+      switch (response.statusCode) {
+        case 200:
+          return response.body.isEmpty ? null : jsonDecode(response.body);
+        case 204:
+          return null;
+        case 400:
+          throw HttpError.badRequest;
+        case 401:
+          throw HttpError.unauthorized;
+        case 403:
+          throw HttpError.forbidden;
+        case 404:
+          throw HttpError.notFound;
+        case 500:
+          throw HttpError.serverError;
+        default:
+          throw Exception('Out of Exception - Check http_adapter');
       }
     } else if (method == "get") {
       var response = await client.get(
@@ -65,6 +66,5 @@ class HttpAdapter implements HttpClient {
       // debugPrint(response.body);
       return jsonDecode(response.body);
     }
-    throw throw HttpError.serverError;
   }
 }

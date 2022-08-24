@@ -20,7 +20,8 @@ void main() {
       when(authentication.auth(authenticationParams));
 
   void mockAuthentication() {
-    mockAutheticationCall().thenAnswer((_) => AccountEntity(faker.guid.guid()));
+    mockAutheticationCall().thenAnswer(
+        (_) => AccountEntity(faker.person.name(), faker.guid.guid()));
   }
 
   void mockAuthenticationError(DomainError error) {
