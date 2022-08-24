@@ -46,7 +46,6 @@ class StreamLoginPresenter implements LoginPresenter {
     }
     _state.isLoading = false;
     _update();
-    // _state.loginAuthError = null;
     return null;
   }
 
