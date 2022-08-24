@@ -21,11 +21,12 @@ class _SignInScreenState extends State<SignInScreen> {
 
   bool _rememberMe = false;
   late AuthenticationParams authenticationParams;
+  late String _email;
+  late String _password;
 
   @override
   initState() {
     super.initState();
-    authenticationParams = AuthenticationParams('mango@gmail.com', '1234');
     debugPrint("initState Called");
   }
 
@@ -56,7 +57,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             height: 10.0,
                           ),
                           Text(
-                            'Aguarde ...',
+                            'Wait ...',
                             textAlign: TextAlign.center,
                           ),
                         ],
@@ -73,6 +74,7 @@ class _SignInScreenState extends State<SignInScreen> {
           });
 
           widget.loginPresenter?.loginAuthErrorStream?.listen((errorMessage) {
+            // debugPrint('Erro Recebido na tela: $errorMessage');
             if (errorMessage != null) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -187,7 +189,7 @@ class _SignInScreenState extends State<SignInScreen> {
               if (!regex.hasMatch(value!) || value.isEmpty) {
                 return 'Please enter a valid email';
               }
-              authenticationParams.setEmail = value;
+              _email = value;
               return null;
             },
             keyboardType: TextInputType.emailAddress,
@@ -232,7 +234,7 @@ class _SignInScreenState extends State<SignInScreen> {
               if (value!.isEmpty) {
                 return 'Please enter a valid password';
               }
-              authenticationParams.setPassword = value;
+              _password = value;
               return null;
             }),
             obscureText: true,
@@ -315,12 +317,20 @@ class _SignInScreenState extends State<SignInScreen> {
         onPressed: () async {
           debugPrint('Login Button Pressed');
           if (_formKey.currentState!.validate()) {
+            authenticationParams = AuthenticationParams(_email, _password);
             await widget.loginPresenter?.auth(authenticationParams);
             // If the form is valid, display a snackbar. In the real world,
             // you'd often call a server or save the information in a database.
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Processing Data')),
-            );
+
+            // ScaffoldMessenger.of(context).showSnackBar(
+            //   const SnackBar(
+            //     content: Text(
+            //       'Processando seus dados',
+            //       textAlign: TextAlign.center,
+            //     ),
+            //     duration: Duration(milliseconds: 500),
+            //   ),
+            // );
           }
         },
         child: const Text(

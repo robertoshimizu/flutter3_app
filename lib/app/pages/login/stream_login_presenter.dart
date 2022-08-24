@@ -9,20 +9,22 @@ import '../../../domain/usecases/user_authentication.dart';
 
 class LoginState {
   bool isLoading = false;
-  String loginAuthError = 'Metodo auth deu problema';
+  String? loginAuthError;
 }
 
 class StreamLoginPresenter implements LoginPresenter {
   final Authentication authentication;
   final _controller = StreamController<LoginState>.broadcast();
 
-  var _state = LoginState();
+  final _state = LoginState();
 
-  Stream<bool> get isLoadingStream =>
-      _controller.stream.map((state) => state.isLoading).distinct();
+  Stream<bool> get isLoadingStream {
+    return _controller.stream.map((state) => state.isLoading).distinct();
+  }
 
-  Stream<String> get loginAuthErrorStream =>
-      _controller.stream.map((state) => state.loginAuthError).distinct();
+  Stream<String?> get loginAuthErrorStream {
+    return _controller.stream.map((state) => state.loginAuthError).distinct();
+  }
 
   StreamLoginPresenter({required this.authentication});
 
@@ -31,6 +33,7 @@ class StreamLoginPresenter implements LoginPresenter {
   @override
   Future<AccountEntity?>? auth(
       AuthenticationParams AuthenticationParams) async {
+    _state.loginAuthError = null;
     _state.isLoading = true;
     _update();
 
@@ -39,9 +42,11 @@ class StreamLoginPresenter implements LoginPresenter {
       // debugPrint('name: ${response!.name}   token: ${response.token} ');
     } on DomainError catch (error) {
       _state.loginAuthError = error.description;
+      // debugPrint('Estado: ${_state.loginAuthError}');
     }
     _state.isLoading = false;
     _update();
+    // _state.loginAuthError = null;
     return null;
   }
 

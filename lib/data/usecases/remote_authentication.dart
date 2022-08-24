@@ -15,7 +15,7 @@ class RemoteAuthentication implements Authentication {
 
   @override
   Future<AccountEntity>? auth(AuthenticationParams params) async {
-    debugPrint('Qual email? ' + params.email);
+    // debugPrint('Qual email? ' + params.email);
     final body = RemoteAuthenticationParams.fromDomain(params).toJson();
     try {
       final httpResponse =
