@@ -57,7 +57,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             height: 10.0,
                           ),
                           Text(
-                            'Wait ...',
+                            'Aguarde ...',
                             textAlign: TextAlign.center,
                           ),
                         ],
@@ -82,7 +82,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     errorMessage,
                     textAlign: TextAlign.center,
                   ),
-                  duration: const Duration(milliseconds: 1000),
+                  duration: const Duration(milliseconds: 2000),
                   backgroundColor: Colors.red[900],
                 ),
               );
