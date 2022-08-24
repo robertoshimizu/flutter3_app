@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter3_app/domain/entities/entities.dart';
 
 import '../../domain/helpers/helpers.dart';
@@ -12,7 +13,9 @@ class RemoteAuthentication implements Authentication {
 
   RemoteAuthentication({required this.httpClient, required this.url});
 
+  @override
   Future<AccountEntity>? auth(AuthenticationParams params) async {
+    debugPrint('Qual email? ' + params.email);
     final body = RemoteAuthenticationParams.fromDomain(params).toJson();
     try {
       final httpResponse =

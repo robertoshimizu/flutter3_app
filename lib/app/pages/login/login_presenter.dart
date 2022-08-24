@@ -7,6 +7,6 @@ abstract class LoginPresenter {
   Stream<bool>? get isLoadingStream;
   Stream<String?>? get loginAuthErrorStream;
 
-  Future<AccountEntity>? auth(AuthenticationParams authenticationParams);
+  Future<AccountEntity?>? auth(AuthenticationParams authenticationParams);
   void dispose();
 }

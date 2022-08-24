@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter3_app/app/pages/login/stream_login_presenter.dart';
+import 'package:flutter3_app/data/usecases/remote_authentication.dart';
+import 'package:flutter3_app/infra/http/http_adapter.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:http/http.dart';
 
 import '../login/login_view.dart';
 
@@ -99,9 +103,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                             context,
                             MaterialPageRoute(
                               builder: (context) {
-                                return const SignInScreen(
-                                  loginPresenter: null,
-                                );
+                                return makeSignInPage();
                               },
                             ),
                           );
@@ -128,6 +130,22 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
       ),
     );
   }
+}
+
+Widget makeSignInPage() {
+  const url = 'http://fordevs.herokuapp.com/api/login';
+  final client = Client();
+  final httpAdapter = HttpAdapter(client);
+  final remoteAuthentication = RemoteAuthentication(
+    httpClient: httpAdapter,
+    url: url,
+  );
+  final streamLoginPresenter =
+      StreamLoginPresenter(authentication: remoteAuthentication);
+
+  return SignInScreen(
+    loginPresenter: streamLoginPresenter,
+  );
 }
 
 class DotIndicator extends StatelessWidget {

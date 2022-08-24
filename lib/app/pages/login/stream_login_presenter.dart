@@ -1,15 +1,18 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
+import 'package:flutter3_app/app/pages/pages.dart';
+import 'package:flutter3_app/domain/entities/user_account.dart';
 import 'package:flutter3_app/domain/helpers/domain_errors.dart';
 
 import '../../../domain/usecases/user_authentication.dart';
 
 class LoginState {
   bool isLoading = false;
-  late String loginAuthError;
+  String loginAuthError = 'Metodo auth deu problema';
 }
 
-class StreamLoginPresenter {
+class StreamLoginPresenter implements LoginPresenter {
   final Authentication authentication;
   final _controller = StreamController<LoginState>.broadcast();
 
@@ -25,16 +28,25 @@ class StreamLoginPresenter {
 
   void _update() => _controller.add(_state);
 
-  Future<void>? auth(AuthenticationParams AuthenticationParams) async {
+  @override
+  Future<AccountEntity?>? auth(
+      AuthenticationParams AuthenticationParams) async {
     _state.isLoading = true;
     _update();
 
     try {
-      await authentication.auth(AuthenticationParams);
+      var response = await authentication.auth(AuthenticationParams);
+      debugPrint('name: ${response!.name}   token: ${response.token} ');
     } on DomainError catch (error) {
       _state.loginAuthError = error.description;
     }
     _state.isLoading = false;
     _update();
+    return null;
+  }
+
+  @override
+  void dispose() {
+    _controller.close();
   }
 }

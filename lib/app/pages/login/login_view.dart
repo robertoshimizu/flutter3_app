@@ -25,7 +25,7 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   initState() {
     super.initState();
-    authenticationParams = AuthenticationParams('', '');
+    authenticationParams = AuthenticationParams('mango@gmail.com', '1234');
     debugPrint("initState Called");
   }
 
