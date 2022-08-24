@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:faker/faker.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter3_app/data/http/http_error.dart';
 import 'package:flutter3_app/data/usecases/usecases.dart';
 import 'package:flutter3_app/domain/usecases/usecases.dart';
 import 'package:flutter3_app/infra/http/http.dart';
@@ -104,6 +106,108 @@ void main() {
       final response = await sut.request(url: url, method: 'post', body: body);
       expect(response, null);
     });
+
+    test('Should return badRequest if post returns 400', () async {
+      // Stub
+      when(client.post(
+        Uri.parse(url),
+        headers: {
+          "content-type": "application/json",
+          "accept": "application/json"
+        },
+        body: jsonEncode(body),
+        encoding: null,
+      )).thenAnswer((_) async => http.Response('', 400));
+
+      // Notice that here we use a future
+      final future = sut.request(url: url, method: 'post', body: body);
+      expect(future, throwsA(HttpError.badRequest));
+    });
+
+    test('Should return Unauthorized if post returns 401', () async {
+      // Stub
+      when(client.post(
+        Uri.parse(url),
+        headers: {
+          "content-type": "application/json",
+          "accept": "application/json"
+        },
+        body: jsonEncode(body),
+        encoding: null,
+      )).thenAnswer((_) async => http.Response('', 401));
+
+      // Notice that here we use a future
+      final future = sut.request(url: url, method: 'post', body: body);
+      expect(future, throwsA(HttpError.unauthorized));
+    });
+
+    test('Should return invalidData if post returns 403', () async {
+      // Stub
+      when(client.post(
+        Uri.parse(url),
+        headers: {
+          "content-type": "application/json",
+          "accept": "application/json"
+        },
+        body: jsonEncode(body),
+        encoding: null,
+      )).thenAnswer((_) async => http.Response('', 403));
+
+      // Notice that here we use a future
+      final future = sut.request(url: url, method: 'post', body: body);
+      expect(future, throwsA(HttpError.forbidden));
+    });
+
+    test('Should return Not Found if post returns 404', () async {
+      // Stub
+      when(client.post(
+        Uri.parse(url),
+        headers: {
+          "content-type": "application/json",
+          "accept": "application/json"
+        },
+        body: jsonEncode(body),
+        encoding: null,
+      )).thenAnswer((_) async => http.Response('', 404));
+
+      // Notice that here we use a future
+      final future = sut.request(url: url, method: 'post', body: body);
+      expect(future, throwsA(HttpError.notFound));
+    });
+
+    test('Should return ServerError if post returns 500', () async {
+      // Stub
+      when(client.post(
+        Uri.parse(url),
+        headers: {
+          "content-type": "application/json",
+          "accept": "application/json"
+        },
+        body: jsonEncode(body),
+        encoding: null,
+      )).thenAnswer((_) async => http.Response('', 500));
+
+      // Notice that here we use a future
+      final future = sut.request(url: url, method: 'post', body: body);
+      expect(future, throwsA(HttpError.serverError));
+    });
+
+    test('Should return ServerError if post throws', () async {
+      // Stub
+      when(client.post(
+        Uri.parse(url),
+        headers: {
+          "content-type": "application/json",
+          "accept": "application/json"
+        },
+        body: jsonEncode(body),
+        encoding: null,
+      )).thenThrow(Exception('Trash Ttal'));
+
+      // Notice that here we use a future
+      final future = sut.request(url: url, method: 'post', body: body);
+      expect(future, throwsA(HttpError.serverError));
+    });
   }));
 
   group('get', () {
@@ -117,5 +221,22 @@ void main() {
       final response = await sut.request(url: url, method: 'get');
       expect(response, {"userId": 1, "id": 2, "title": "mock"});
     });
+  });
+
+  test('Should return server error if no hhtp method is especified', () async {
+    // Stub
+    when(client.post(
+      Uri.parse(url),
+      headers: {
+        "content-type": "application/json",
+        "accept": "application/json"
+      },
+      body: jsonEncode(body),
+      encoding: null,
+    )).thenAnswer((_) async => http.Response('', 403));
+
+    // Notice that here we use a future
+    final future = sut.request(url: url, method: '', body: body);
+    expect(future, throwsA(HttpError.serverError));
   });
 }

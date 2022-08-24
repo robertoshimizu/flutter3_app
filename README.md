@@ -107,7 +107,34 @@ class RemoteAccountModel {
 }
 ```
 
-2.
+#### Test and Mock http
+
+Had to mock Http requests using mockito, creating a file with a mocl `http.Client`. Because this would be a integration test.
+https://docs.flutter.dev/cookbook/testing/unit/mocking
+
+Important to use `alias`to differentiate the `http.Client` from `http.MockClient`.
+When mocking Exceptions, use a future to compare. (i.e. do not use await):
+
+```dart
+test('Should return BadRequestError if post returns 400', () async {
+      // Stub
+      when(client.post(
+        Uri.parse(url),
+        headers: {
+          "content-type": "application/json",
+          "accept": "application/json"
+        },
+        body: jsonEncode(body),
+        encoding: null,
+      )).thenAnswer((_) async => http.Response('Not Found', 404));
+
+      // Do not use await here to get the response
+      final future = sut.request(url: url, method: 'post', body: body);
+      debugPrint('Resposta da chamada: ' + future.toString());
+      expect(future, throwsA(HttpError.badRequest));
+    });
+  }));
+```
 
 ### Testing widgets
 

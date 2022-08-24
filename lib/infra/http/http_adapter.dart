@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:flutter3_app/data/http/http_client.dart';
+import 'package:flutter3_app/data/http/http_error.dart';
 import 'package:http/http.dart';
 
 class HttpAdapter implements HttpClient {
@@ -9,7 +11,7 @@ class HttpAdapter implements HttpClient {
   HttpAdapter(this.client);
 
   @override
-  Future<Map<dynamic, dynamic>?>? request({
+  Future<Map<dynamic, dynamic>?> request({
     required String url,
     required String method,
     Map? body,
@@ -24,20 +26,38 @@ class HttpAdapter implements HttpClient {
     final jsonBody = body != null ? jsonEncode(body) : null;
 
     if (method == "post") {
-      Response response = await client.post(
-        Uri.parse(url),
-        headers: headers,
-        body: jsonBody,
-        encoding: null,
-      );
-      // debugPrint(response.body);
-      if (response.statusCode == 200) {
-        return response.body.isEmpty ? null : jsonDecode(response.body);
-      } else {
-        return null;
+      try {
+        Response response = await client.post(
+          Uri.parse(url),
+          headers: headers,
+          body: jsonBody,
+          encoding: null,
+        );
+        // debugPrint(response.body);
+
+        switch (response.statusCode) {
+          case 200:
+            return response.body.isEmpty ? null : jsonDecode(response.body);
+          case 204:
+            return null;
+          case 400:
+            throw HttpError.badRequest;
+          case 401:
+            throw HttpError.unauthorized;
+          case 403:
+            throw HttpError.forbidden;
+          case 404:
+            throw HttpError.notFound;
+          case 500:
+            throw HttpError.serverError;
+          default:
+            throw Exception('Out of Exception - Check http_adapter');
+        }
+      } catch (e) {
+        debugPrint('Deu mal');
+        throw HttpError.serverError;
       }
-    }
-    if (method == "get") {
+    } else if (method == "get") {
       var response = await client.get(
         Uri.parse(url),
         headers: headers,
@@ -45,5 +65,6 @@ class HttpAdapter implements HttpClient {
       // debugPrint(response.body);
       return jsonDecode(response.body);
     }
+    throw throw HttpError.serverError;
   }
 }
