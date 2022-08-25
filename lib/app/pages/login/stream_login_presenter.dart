@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter3_app/app/pages/pages.dart';
 import 'package:flutter3_app/domain/entities/user_account.dart';
 import 'package:flutter3_app/domain/helpers/domain_errors.dart';
@@ -14,21 +13,22 @@ class LoginState {
 
 class StreamLoginPresenter implements LoginPresenter {
   final Authentication authentication;
-  final _controller = StreamController<LoginState>.broadcast();
+
+  StreamLoginPresenter({required this.authentication});
 
   final _state = LoginState();
+  final _controller = StreamController<LoginState>.broadcast();
+  void _update() => _controller.add(_state);
 
+  @override
   Stream<bool> get isLoadingStream {
     return _controller.stream.map((state) => state.isLoading).distinct();
   }
 
+  @override
   Stream<String?> get loginAuthErrorStream {
     return _controller.stream.map((state) => state.loginAuthError).distinct();
   }
-
-  StreamLoginPresenter({required this.authentication});
-
-  void _update() => _controller.add(_state);
 
   @override
   Future<AccountEntity?>? auth(
